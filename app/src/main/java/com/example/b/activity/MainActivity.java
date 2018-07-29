@@ -1,6 +1,9 @@
 package com.example.b.activity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.IBinder;
 import android.os.health.TimerStat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +19,9 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.b.R;
-
+import com.example.b.activity.MService.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,11 +36,10 @@ import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
     private Intent intent;
-    private Bundle b;
+    public Bundle b;
     private boolean flag;
     private boolean flag2;
-    private Bitmap image;
-
+    private ImageView mImageView;
     @Override
     protected void onStart() {
         super.onStart();
@@ -55,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
 
                 flag2 = true;
-                new LinkImageViewer((ImageView) findViewById(R.id.imageView)).execute(imageURL);
+               linkViewer(imageURL);
             } else if (b.getString("FROM").equals("HISTORY")) {
                 final String imageURL = b.getString("IMAGE_LINK");
                 int imageStatus = b.getInt("IMAGE_STATUS");
@@ -71,15 +75,14 @@ public class MainActivity extends AppCompatActivity {
 
                     flag = false;
                     flag2 = false;
-                    new LinkImageViewer((ImageView) findViewById(R.id.imageView)).execute(imageURL);
+                    linkViewer(imageURL);
 
                     new CountDownTimer(15000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
                         }
-
                         public void onFinish() {
-                            saveOnSDCard(imageURL);
+                            startService(new Intent(getApplicationContext(),MService.class));
                             sendBroadcast(intent);
                             showToast("Ссылка : " + imageURL + " была удалена");
                         }
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
                     flag = true;
                     flag2 = false;
-                    new LinkImageViewer((ImageView) findViewById(R.id.imageView)).execute(imageURL);
+
                 }
             }
         } else {
@@ -109,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         b = getIntent().getExtras();
-
+        mImageView = findViewById(R.id.imageView);
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
     }
 
@@ -130,66 +133,33 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-    public void saveOnSDCard(String url) {
-        File dir = new File(Environment.getExternalStorageDirectory() + "/BIGDIG/test/B");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
+//    public void saveOnSDCard(String url) {
+//        File dir = new File(Environment.getExternalStorageDirectory() + "/BIGDIG/test/B");
+//        if (!dir.exists()) {
+//            dir.mkdirs();
+//        }
+//
+//        String[] array = url.split("/");
+//        url = array[array.length - 1];
+//        url = url.substring(0, url.indexOf("."));
+//
+//        File file = new File(dir, url + ".png");
+//
+//        OutputStream os;
+//        try {
+//            os = new FileOutputStream(file);
+//            os.flush();
+//            os.close();
+//        } catch (IOException ioe) {
+//            showToast("Ошибка " + ioe.toString());
+//        }
+//    }
 
-        String[] array = url.split("/");
-        url = array[array.length - 1];
-        url = url.substring(0, url.indexOf("."));
-
-        File file = new File(dir, url + ".png");
-
-        OutputStream os;
-        try {
-            os = new FileOutputStream(file);
-            image.compress(Bitmap.CompressFormat.PNG, 100, os);
-            os.flush();
-            os.close();
-        } catch (IOException ioe) {
-            showToast("Ошибка " + ioe.toString());
-        }
-    }
-
-    private class LinkImageViewer extends AsyncTask<String, Void, Bitmap> {
-        ImageView bitmapImage;
-
-        public LinkImageViewer(ImageView bitmapImage) {
-            this.bitmapImage = bitmapImage;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... urls) {
-            String url = urls[0];
-            Bitmap Image = null;
-            try {
-                URL imageUrl = new URL(url);
-                InputStream inputStream = imageUrl.openStream();
-                Image = BitmapFactory.decodeStream(inputStream);
-                if (flag2) {
-                    intent.putExtra("IMAGE_STATUS", 1);
-                    sendBroadcast(intent);
-                } else {
-                    if (flag) {
-                        intent.putExtra("IMAGE_STATUS", 1);
-                        sendBroadcast(intent);
-                    }
-                }
-            } catch (Exception e) {
-                if (flag2) {
-                    intent.putExtra("IMAGE_STATUS", 2);
-                    sendBroadcast(intent);
-                }
-            }
-            return Image;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            image = result;
-            bitmapImage.setImageBitmap(result);
-        }
-    }
+ public void linkViewer(String imageURL){
+     Glide
+             .with(this)
+             .load(imageURL)
+             .into(mImageView);
+ }
 
 }
