@@ -1,6 +1,9 @@
 package com.example.b.activity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.IBinder;
 import android.os.health.TimerStat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.b.R;
-
+import com.example.b.activity.MService.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,7 +36,7 @@ import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
     private Intent intent;
-    private Bundle b;
+    public Bundle b;
     private boolean flag;
     private boolean flag2;
     private ImageView mImageView;
@@ -77,9 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
                         public void onTick(long millisUntilFinished) {
                         }
-
                         public void onFinish() {
-                            saveOnSDCard(imageURL);
+                            startService(new Intent(getApplicationContext(),MService.class));
                             sendBroadcast(intent);
                             showToast("Ссылка : " + imageURL + " была удалена");
                         }
@@ -130,27 +133,27 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-    public void saveOnSDCard(String url) {
-        File dir = new File(Environment.getExternalStorageDirectory() + "/BIGDIG/test/B");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        String[] array = url.split("/");
-        url = array[array.length - 1];
-        url = url.substring(0, url.indexOf("."));
-
-        File file = new File(dir, url + ".png");
-
-        OutputStream os;
-        try {
-            os = new FileOutputStream(file);
-            os.flush();
-            os.close();
-        } catch (IOException ioe) {
-            showToast("Ошибка " + ioe.toString());
-        }
-    }
+//    public void saveOnSDCard(String url) {
+//        File dir = new File(Environment.getExternalStorageDirectory() + "/BIGDIG/test/B");
+//        if (!dir.exists()) {
+//            dir.mkdirs();
+//        }
+//
+//        String[] array = url.split("/");
+//        url = array[array.length - 1];
+//        url = url.substring(0, url.indexOf("."));
+//
+//        File file = new File(dir, url + ".png");
+//
+//        OutputStream os;
+//        try {
+//            os = new FileOutputStream(file);
+//            os.flush();
+//            os.close();
+//        } catch (IOException ioe) {
+//            showToast("Ошибка " + ioe.toString());
+//        }
+//    }
 
  public void linkViewer(String imageURL){
      Glide
