@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.b.R;
 
 import java.io.File;
@@ -34,8 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private Bundle b;
     private boolean flag;
     private boolean flag2;
-    private Bitmap image;
-
+    private ImageView mImageView;
     @Override
     protected void onStart() {
         super.onStart();
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
 
                 flag2 = true;
-                new LinkImageViewer((ImageView) findViewById(R.id.imageView)).execute(imageURL);
+               linkViewer(imageURL);
             } else if (b.getString("FROM").equals("HISTORY")) {
                 final String imageURL = b.getString("IMAGE_LINK");
                 int imageStatus = b.getInt("IMAGE_STATUS");
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
                     flag = false;
                     flag2 = false;
-                    new LinkImageViewer((ImageView) findViewById(R.id.imageView)).execute(imageURL);
+                    linkViewer(imageURL);
 
                     new CountDownTimer(15000, 1000) {
 
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
                     flag = true;
                     flag2 = false;
-                    new LinkImageViewer((ImageView) findViewById(R.id.imageView)).execute(imageURL);
+
                 }
             }
         } else {
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         b = getIntent().getExtras();
-
+        mImageView = findViewById(R.id.imageView);
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
     }
 
@@ -145,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
         OutputStream os;
         try {
             os = new FileOutputStream(file);
-            image.compress(Bitmap.CompressFormat.PNG, 100, os);
             os.flush();
             os.close();
         } catch (IOException ioe) {
@@ -153,43 +152,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class LinkImageViewer extends AsyncTask<String, Void, Bitmap> {
-        ImageView bitmapImage;
-
-        public LinkImageViewer(ImageView bitmapImage) {
-            this.bitmapImage = bitmapImage;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... urls) {
-            String url = urls[0];
-            Bitmap Image = null;
-            try {
-                URL imageUrl = new URL(url);
-                InputStream inputStream = imageUrl.openStream();
-                Image = BitmapFactory.decodeStream(inputStream);
-                if (flag2) {
-                    intent.putExtra("IMAGE_STATUS", 1);
-                    sendBroadcast(intent);
-                } else {
-                    if (flag) {
-                        intent.putExtra("IMAGE_STATUS", 1);
-                        sendBroadcast(intent);
-                    }
-                }
-            } catch (Exception e) {
-                if (flag2) {
-                    intent.putExtra("IMAGE_STATUS", 2);
-                    sendBroadcast(intent);
-                }
-            }
-            return Image;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            image = result;
-            bitmapImage.setImageBitmap(result);
-        }
-    }
+ public void linkViewer(String imageURL){
+     Glide
+             .with(this)
+             .load(imageURL)
+             .into(mImageView);
+ }
 
 }
