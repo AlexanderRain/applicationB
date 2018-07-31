@@ -27,6 +27,8 @@ public class MyService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String url1 = intent.getStringExtra("url");
         saveOnSDCard(url1);
+      //  file_download(url1);//
+
     }
 
     public void onDestroy() {
@@ -43,16 +45,39 @@ public class MyService extends IntentService {
         url = url.substring(0, url.indexOf("."));
 
         File file = new File(dir, url + ".png");
-        os = new FileOutputStream(file);
 
         OutputStream os;
         try {
+            os = new FileOutputStream(file);
             os.flush();
             os.close();
-        } catch (IOException ioe) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    ("Ошибка"+ioe.toString()), Toast.LENGTH_SHORT);
+        } catch (IOException ioe) {    Toast toast = Toast.makeText(getApplicationContext(),
+                ("Ошибка"+ioe.toString()), Toast.LENGTH_SHORT);
             toast.show();
         }
     }
+//    public void file_download(String uRl) {
+//        File direct = new File(Environment.getExternalStorageDirectory()
+//                + "/BImage");
+//
+//        if (!direct.exists()) {
+//            direct.mkdirs();
+//        }
+//
+//        DownloadManager mgr = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
+//
+//        Uri downloadUri = Uri.parse(uRl);
+//        DownloadManager.Request request = new DownloadManager.Request(
+//                downloadUri);
+//
+//        request.setAllowedNetworkTypes(
+//                DownloadManager.Request.NETWORK_WIFI
+//                        | DownloadManager.Request.NETWORK_MOBILE)
+//                .setAllowedOverRoaming(false).setTitle("Назва")
+//                .setDescription("Опис")
+//                .setDestinationInExternalFilesDir(this,"/BImage", "test.jpg");
+//
+//        mgr.enqueue(request);
+//
+//    }
 }
