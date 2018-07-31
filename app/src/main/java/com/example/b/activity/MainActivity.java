@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean flag;
     private boolean flag2;
     private ImageView mImageView;
+
+    // switched to master
     @Override
     protected void onStart() {
         super.onStart();
