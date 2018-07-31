@@ -26,35 +26,11 @@ public class MyService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         String url1 = intent.getStringExtra("url");
-        file_download(url1);
         saveOnSDCard(url1);
     }
 
     public void onDestroy() {
         super.onDestroy();
-    }
-    public void file_download(String uRl) {
-        File direct = new File(Environment.getExternalStorageDirectory()
-                + "/BImage");
-
-        if (!direct.exists()) {
-            direct.mkdirs();
-        }
-
-        DownloadManager mgr = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
-
-        Uri downloadUri = Uri.parse(uRl);
-        DownloadManager.Request request = new DownloadManager.Request(
-                downloadUri);
-
-        request.setAllowedNetworkTypes(
-                DownloadManager.Request.NETWORK_WIFI
-                        | DownloadManager.Request.NETWORK_MOBILE)
-                .setAllowedOverRoaming(false).setTitle("Назва")
-                .setDescription("Опис")
-                .setDestinationInExternalFilesDir(this,"/BImage", "test.jpg");
-
-        mgr.enqueue(request);
     }
     public void saveOnSDCard(String url) {
         File dir = new File(Environment.getExternalStorageDirectory() + "/BIGDIG/test/B");
