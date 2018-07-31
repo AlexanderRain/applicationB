@@ -25,11 +25,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
+      
         <service
             android:name=".activity.MyService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+      </service>
+      
     </application>
 
 </manifest>
