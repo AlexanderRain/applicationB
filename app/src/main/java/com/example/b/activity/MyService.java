@@ -43,10 +43,10 @@ public class MyService extends IntentService {
         url = url.substring(0, url.indexOf("."));
 
         File file = new File(dir, url + ".png");
+        os = new FileOutputStream(file);
 
         OutputStream os;
         try {
-            os = new FileOutputStream(file);
             os.flush();
             os.close();
         } catch (IOException ioe) {
