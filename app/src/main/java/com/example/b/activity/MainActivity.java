@@ -2,6 +2,7 @@ package com.example.b.activity;
 
 
 import android.Manifest;
+
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -9,14 +10,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.example.b.R;
-
+import com.example.b.activity.MService.*;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,6 +29,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     public Bundle b;
     private Intent intent;
+
     private boolean flag;
     private boolean flag2;
     private ImageView mImageView;
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
                 flag2 = true;
                 linkViewer(imageURL);
+
             } else if (b.getString("FROM").equals("HISTORY")) {
                 final String imageURL = b.getString("IMAGE_LINK");
                 int imageStatus = b.getInt("IMAGE_STATUS");
@@ -71,9 +76,11 @@ public class MainActivity extends AppCompatActivity {
                         public void onTick(long millisUntilFinished) {
                         }
                         public void onFinish() {
+
                             Toast toast = Toast.makeText(getApplicationContext(),
                                     "WORK", Toast.LENGTH_SHORT);
                             toast.show();
+
                             sendBroadcast(intent);
                             showToast("Ссылка : " + imageURL + " была удалена");
                         }
@@ -124,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-
     public void linkViewer(String imageURL){
         Glide
                 .with(this)
@@ -132,5 +138,6 @@ public class MainActivity extends AppCompatActivity {
                 .into(mImageView);
         startService(new Intent(this, MyService.class).putExtra("url",imageURL ) );
     }
+
 
 }

@@ -27,8 +27,8 @@ public class MyService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String url1 = intent.getStringExtra("url");
         saveOnSDCard(url1);
-      //  file_download(url1);//
 
+      //  file_download(url1);//
     }
 
     public void onDestroy() {
@@ -80,4 +80,5 @@ public class MyService extends IntentService {
 //        mgr.enqueue(request);
 //
 //    }
+
 }
