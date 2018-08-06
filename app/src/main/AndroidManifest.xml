@@ -27,7 +27,7 @@
         </activity>
 
         <service
-            android:name=".activity.MyService"
+            android:name=".activity.presentation.ui.MyService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

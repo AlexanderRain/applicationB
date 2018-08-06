@@ -2,8 +2,7 @@ package com.example.b.activity.presentation.presenters.impl;
 
 import android.view.View;
 
-import com.example.b.activity.domain.executor.Executor;
-import com.example.b.activity.domain.executor.MainThread;
+
 import com.example.b.activity.domain.interactors.SampleInteractor;
 import com.example.b.activity.presentation.presenters.MainPresenter;
 import com.example.b.activity.presentation.presenters.base.AbstractPresenter;
@@ -13,10 +12,9 @@ public class MainPresenterImpl extends AbstractPresenter implements MainPresente
 
     private MainPresenter.View mView;
 
-    public MainPresenterImpl(Executor executor,
-                             MainThread mainThread,
+    public MainPresenterImpl(
                              View view) {
-        super(executor, mainThread);
+        super();
         mView = view;
     }
 

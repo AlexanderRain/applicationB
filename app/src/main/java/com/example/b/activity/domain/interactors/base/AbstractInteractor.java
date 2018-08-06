@@ -1,19 +1,12 @@
 package com.example.b.activity.domain.interactors.base;
 
-import com.example.b.activity.domain.executor.Executor;
-import com.example.b.activity.domain.executor.MainThread;
-
 public abstract class AbstractInteractor implements Interactor {
 
-    protected Executor mThreadExecutor;
-    protected MainThread mMainThread;
 
     protected volatile boolean mIsCanceled;
     protected volatile boolean mIsRunning;
 
-    public AbstractInteractor(Executor threadExecutor, MainThread mainThread) {
-        mThreadExecutor = threadExecutor;
-        mMainThread = mainThread;
+    public AbstractInteractor() {
     }
 
     public abstract void run();
@@ -35,8 +28,6 @@ public abstract class AbstractInteractor implements Interactor {
     public void execute() {
 
         this.mIsRunning = true;
-
-        mThreadExecutor.execute(this);
     }
 
 }

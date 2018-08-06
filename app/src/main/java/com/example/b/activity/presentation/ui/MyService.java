@@ -1,4 +1,4 @@
-package com.example.b.activity;
+package com.example.b.activity.presentation.ui;
 
 import android.app.DownloadManager;
 import android.app.IntentService;
