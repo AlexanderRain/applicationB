@@ -1,10 +1,7 @@
-package com.example.b.activity.presentation.ui;
+package com.example.b.activity.model.service;
 
-import android.app.DownloadManager;
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 import java.io.File;
@@ -13,7 +10,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class MyService extends IntentService {
-
 
     public MyService() {
         super("myname");
@@ -27,15 +23,15 @@ public class MyService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String url1 = intent.getStringExtra("url");
         saveOnSDCard(url1);
-      //  file_download(url1);//
-
     }
 
     public void onDestroy() {
         super.onDestroy();
     }
+
     public void saveOnSDCard(String url) {
         File dir = new File(Environment.getExternalStorageDirectory() + "/BIGDIG/test/B");
+
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -51,11 +47,13 @@ public class MyService extends IntentService {
             os = new FileOutputStream(file);
             os.flush();
             os.close();
-        } catch (IOException ioe) {    Toast toast = Toast.makeText(getApplicationContext(),
-                ("Ошибка"+ioe.toString()), Toast.LENGTH_SHORT);
+        } catch (IOException ioe) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    ("Ошибка" + ioe.toString()), Toast.LENGTH_SHORT);
             toast.show();
         }
     }
+}
 //    public void file_download(String uRl) {
 //        File direct = new File(Environment.getExternalStorageDirectory()
 //                + "/BImage");
@@ -80,4 +78,3 @@ public class MyService extends IntentService {
 //        mgr.enqueue(request);
 //
 //    }
-}
