@@ -29,7 +29,8 @@ public class MainPresenter {
             switch (imageStatus) {
                 case DEFAULT:
                     //  Alexander Rain: this case for links, comes from test fragment
-                    interactor.insertImage(imageUrl, imageStatus);
+                    interactor.insertImage(imageUrl, INSERTED);
+                    view.showImage(imageUrl);
                     break;
 
                 case INSERTED:
@@ -54,7 +55,7 @@ public class MainPresenter {
         // In this case network connected
         if (network != null && network.isConnected()) {
             status = INSERTED;
-            view.showImage(imageUrl);
+
             // In this case connection is not ot found, so status UNDEFINED
         } else if (network == null || !network.isConnected()) {
             status = UNDEFINED;
