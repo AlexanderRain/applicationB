@@ -62,10 +62,7 @@ public class MainRepository {
         Log.e("Log", " SENDED DELETE");
     }
 
-    public String getImageDate() {
-        DateFormat df = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
-        Date today = Calendar.getInstance().getTime();
-        String imageDate = df.format(today);
-        return imageDate;
+    private String getImageDate() {
+        return new Date(System.currentTimeMillis()).toString();
     }
 }
