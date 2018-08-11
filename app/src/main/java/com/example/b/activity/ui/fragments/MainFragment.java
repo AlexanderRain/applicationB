@@ -25,6 +25,7 @@ import com.example.b.activity.presenters.MainPresenter;
 import static com.example.b.activity.utils.Constants.IMAGE_ID;
 import static com.example.b.activity.utils.Constants.IMAGE_STATUS;
 import static com.example.b.activity.utils.Constants.IMAGE_URL;
+import static com.example.b.activity.utils.Constants.INSERTED;
 
 public class MainFragment extends Fragment implements MainFragmentView {
 
@@ -95,26 +96,21 @@ public class MainFragment extends Fragment implements MainFragmentView {
     }
 
     public void saveOnPath(String imageUrl) {
-       context.startService(new Intent(context, ImageDownloadService.class).putExtra(IMAGE_URL, imageUrl));
+        context.startService(new Intent(context, ImageDownloadService.class).putExtra(IMAGE_URL, imageUrl));
     }
 
     public void closeApp() {
         Toast toast = Toast.makeText(getActivity().getApplicationContext(),
                 "Приложение В не является самостоятельным приложением и будет закрыто через 10 секунд", Toast.LENGTH_SHORT);
         toast.show();
-        new CountDownTimer(10000, 1000) {
-
+        new android.os.Handler().postDelayed(new Runnable() {
             @Override
-            public void onTick(long millisUntilFinished) {
-            }
-
-            @Override
-            public void onFinish() {
+            public void run() {
                 if(getActivity()!= null) {
                     getActivity().finish();
                     System.exit(0);
                 }
             }
-        }.start();
+        },10000);
     }
 }

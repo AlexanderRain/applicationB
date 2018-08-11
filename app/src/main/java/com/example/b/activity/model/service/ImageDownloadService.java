@@ -41,7 +41,7 @@ public class ImageDownloadService extends IntentService {
 
             request.setAllowedNetworkTypes(
                     DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                    .setDestinationInExternalPublicDir(PATH,imageUrl +JPG);
+                    .setDestinationInExternalPublicDir(PATH,JPG);
 
             downloadManager.enqueue(request);
         } else {
@@ -57,7 +57,7 @@ public class ImageDownloadService extends IntentService {
 
             request.setAllowedNetworkTypes(
                     DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                    .setDestinationInExternalPublicDir(PATH, imageUrl + JPG);
+                    .setDestinationInExternalPublicDir(PATH, JPG);
 
             downloadManager.enqueue(request);
         }

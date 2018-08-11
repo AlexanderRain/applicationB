@@ -2,8 +2,6 @@ package com.example.b.activity.presenters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 
 import com.bumptech.glide.load.DataSource;
@@ -12,6 +10,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.b.activity.model.interactors.MainInteractor;
 import com.example.b.activity.ui.fragments.MainFragmentView;
+
+import java.util.logging.Handler;
 
 import static com.example.b.activity.utils.Constants.DEFAULT;
 import static com.example.b.activity.utils.Constants.DELETE;
@@ -47,7 +47,7 @@ public class MainPresenter {
             case INSERTED:
                 view.saveOnPath(imageUrl);
                 view.showImage(imageUrl, null);
-                interactor.deleteImage(imageUrl, INSERTED, imageId);
+                deleteWithDelayed(imageUrl, imageId);
                 // Alexander Rain: this case for successful loaded links
                 break;
 
@@ -89,6 +89,15 @@ public class MainPresenter {
                 return false;
             }
         };
+    }
+
+    private void deleteWithDelayed(final String imageUrl, final long imageId) {
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                interactor.deleteImage(imageUrl, INSERTED, imageId);
+            }
+        },10000);
     }
 
 }
