@@ -1,8 +1,6 @@
 package com.example.b.activity.ui.fragments;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -15,13 +13,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.b.R;
 import com.example.b.activity.presenters.MainPresenter;
 
 import static com.example.b.activity.utils.Constants.IMAGE_STATUS;
 import static com.example.b.activity.utils.Constants.IMAGE_URL;
-import static com.example.b.activity.utils.Constants.UNDEFINED;
-
 
 public class MainFragment extends Fragment implements MainFragmentView {
 
@@ -69,11 +68,18 @@ public class MainFragment extends Fragment implements MainFragmentView {
         presenter.receiveExtras(getArguments().getString(IMAGE_URL), getArguments().getInt(IMAGE_STATUS));
     }
 
-    public void showImage(String imageUrl) {
-        Glide
-                .with(this)
-                .load(imageUrl)
-                .into(imageView);
+    public void showImage(String imageUrl, RequestListener<Bitmap> requestListener) {
+        RequestBuilder<Bitmap> requestBuilder =
+                Glide
+                        .with(this)
+                        .asBitmap()
+                        .load(imageUrl)
+                        .apply(new RequestOptions()
+                                .error(R.drawable.load_failed));
+
+        // Alexander Rain:
+        // listener() sets a RequestBuilder listener to monitor the resource load
+        requestBuilder.listener(requestListener).into(imageView);
     }
 
     public void closeApp() {

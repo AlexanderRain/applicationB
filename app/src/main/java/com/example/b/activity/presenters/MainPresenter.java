@@ -1,9 +1,15 @@
 package com.example.b.activity.presenters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.b.activity.model.interactors.MainInteractor;
 import com.example.b.activity.ui.fragments.MainFragmentView;
 
@@ -25,42 +31,44 @@ public class MainPresenter {
     }
 
     public void receiveExtras(String imageUrl, int imageStatus) {
-        try {
-            switch (imageStatus) {
-                case DEFAULT:
-                    //  Alexander Rain: this case for links, comes from test fragment
-                    interactor.insertImage(imageUrl, INSERTED);
-                    view.showImage(imageUrl);
-                    break;
 
-                case INSERTED:
-                    //  Alexander Rain: this case for successful loaded links
+        switch (imageStatus) {
+            case DEFAULT:
+                // Alexander Rain: imageUrl == nul, when app start from launcher
+                if(imageUrl == null) {
+                    view.closeApp();
                     break;
+                }
+                // Alexander Rain: this case for links, comes from test fragment
+                view.showImage(imageUrl, getInsertRequestListener(imageUrl));
+                break;
 
-                default:
-                    // Alexander Rain: this case for UNDEFINED and ERROR links
+            case INSERTED:
+                // Alexander Rain: this case for successful loaded links
+                break;
+
+            default:
+                // Alexander Rain: this case for UNDEFINED and ERROR links
                 interactor.updateImage(imageUrl, imageStatus);
+        }
+    }
+
+    // Alexander Rain:
+    // https://bumptech.github.io/glide/javadocs/400/com/bumptech/glide/request/RequestListener.html
+    public RequestListener<Bitmap> getInsertRequestListener(final String imageUrl) {
+        return new RequestListener<Bitmap>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                interactor.insertImage(imageUrl, ERROR);
+                return false;
             }
-        }catch (Exception exception) {
-            // Alexander Rain: exception appears when application started from launcher
-            view.closeApp();
-        }
+
+            @Override
+            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                interactor.insertImage(imageUrl, INSERTED);
+                return false;
+            }
+        };
     }
-    public int checkForInternetConnection(String imageUrl) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo network = connectivityManager.getActiveNetworkInfo();
-        int status = ERROR;
 
-        // Alexander Rain: may return null when there is no default network
-        // In this case network connected
-        if (network != null && network.isConnected()) {
-            status = INSERTED;
-
-            // In this case connection is not ot found, so status UNDEFINED
-        } else if (network == null || !network.isConnected()) {
-            status = UNDEFINED;
-
-        }
-        return status;
-    }
 }

@@ -14,7 +14,7 @@ import static com.example.b.activity.utils.Constants.IMAGE_DATE;
 import static com.example.b.activity.utils.Constants.IMAGE_STATUS;
 import static com.example.b.activity.utils.Constants.IMAGE_URL;
 import static com.example.b.activity.utils.Constants.INSERT;
-import static com.example.b.activity.utils.Constants.RECIVE;
+import static com.example.b.activity.utils.Constants.RECEIVE;
 import static com.example.b.activity.utils.Constants.UPDATE;
 
 public class MainRepository {
@@ -26,7 +26,7 @@ public class MainRepository {
     }
 
     public void insertImage(String imageUrl, int imageStatus) {
-        Intent intent = new Intent(RECIVE);
+        Intent intent = new Intent(RECEIVE);
 
         intent.putExtra(IMAGE_ACTION, INSERT);
         intent.putExtra(IMAGE_URL, imageUrl);
@@ -37,7 +37,7 @@ public class MainRepository {
     }
 
     public void updateImage(String imageUrl, int imageStatus) {
-        Intent intent = new Intent(RECIVE);
+        Intent intent = new Intent(RECEIVE);
 
         intent.putExtra(IMAGE_ACTION, UPDATE);
         intent.putExtra(IMAGE_URL, imageUrl);
@@ -48,7 +48,7 @@ public class MainRepository {
     }
 
     public void deleteImage(String imageUrl, int imageStatus) {
-        Intent intent = new Intent(RECIVE);
+        Intent intent = new Intent(RECEIVE);
 
         intent.putExtra(IMAGE_ACTION, DELETE);
         intent.putExtra(IMAGE_URL, imageUrl);
