@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.b.R;
 import com.example.b.activity.presenters.MainPresenter;
 
+import static com.example.b.activity.utils.Constants.IMAGE_DATE;
 import static com.example.b.activity.utils.Constants.IMAGE_STATUS;
 import static com.example.b.activity.utils.Constants.IMAGE_URL;
 
@@ -31,12 +32,13 @@ public class MainFragment extends Fragment implements MainFragmentView {
     // Alexander Rain: буду подписываться как Женя)0))
     // Что, что, что за метод, что тут происходит?
     // https://tttzof351.blogspot.com/2014/06/android.html
-    public static MainFragment newInstance(String imageUrl, int imageStatus) {
+    public static MainFragment newInstance(String imageUrl, int imageStatus, String imageDate) {
         MainFragment mainFragment = new MainFragment();
         Bundle extras = new Bundle();
 
         extras.putString(IMAGE_URL, imageUrl);
         extras.putInt(IMAGE_STATUS, imageStatus);
+        extras.putString(IMAGE_DATE, imageDate);
         mainFragment.setArguments(extras);
 
         return mainFragment;
@@ -65,10 +67,12 @@ public class MainFragment extends Fragment implements MainFragmentView {
 
         imageView = view.findViewById(R.id.image);
 
-        presenter.receiveExtras(getArguments().getString(IMAGE_URL), getArguments().getInt(IMAGE_STATUS));
+        presenter.receiveExtras(getArguments().getString(IMAGE_URL), getArguments().getInt(IMAGE_STATUS), getArguments().getString(IMAGE_DATE));
     }
 
     public void showImage(String imageUrl, RequestListener<Bitmap> requestListener) {
+        // Alexander Rain:
+        // https://bumptech.github.io/glide/doc/options.html#requestbuilder
         RequestBuilder<Bitmap> requestBuilder =
                 Glide
                         .with(this)
@@ -79,7 +83,13 @@ public class MainFragment extends Fragment implements MainFragmentView {
 
         // Alexander Rain:
         // listener() sets a RequestBuilder listener to monitor the resource load
-        requestBuilder.listener(requestListener).into(imageView);
+        if(requestBuilder != null) {
+            requestBuilder.listener(requestListener).into(imageView);
+
+        } else {
+            // Alexander Rain: requestBuilder == null, when link status - INSERTED
+            requestBuilder.into(imageView);
+        }
     }
 
     public void closeApp() {
@@ -94,42 +104,11 @@ public class MainFragment extends Fragment implements MainFragmentView {
 
             @Override
             public void onFinish() {
-                getActivity().finish();
-                System.exit(0);
+                if(getActivity()!= null) {
+                    getActivity().finish();
+                    System.exit(0);
+                }
             }
         }.start();
     }
 }
-
-/*private ImageView mImageView;
-    public Bundle b;
-    private Intent intent;
-    private boolean flag;
-    private boolean flag2;
-    @Override
-    public void onStart() {
-        super.onStart();
-        MainActivity mainActivity = new MainActivity();
-        mainActivity.check();
-    }
-
-    public void closeAPP(){
-        MainActivity mainActivity = new MainActivity();
-        mainActivity.closeApp();
-    }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        MainActivity mainActivity = new MainActivity();
-        mainActivity.create();
-
-    }
-    public void linkViewerFragment(String imageURL){
-        MainActivity mainActivity = new MainActivity();
-        mainActivity.linkViewer(imageURL);
-    }
-    public void  saveOnSD(String imageURL) {
-        MainActivity mainActivity = new MainActivity();
-        mainActivity.saveOn(imageURL);
-    }*/
-

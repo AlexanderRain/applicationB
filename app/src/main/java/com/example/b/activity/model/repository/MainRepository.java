@@ -2,6 +2,7 @@ package com.example.b.activity.model.repository;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,7 +19,7 @@ import static com.example.b.activity.utils.Constants.RECEIVE;
 import static com.example.b.activity.utils.Constants.UPDATE;
 
 public class MainRepository {
-    //intents
+
     Context context;
 
     public MainRepository(Context context) {
@@ -34,26 +35,31 @@ public class MainRepository {
         intent.putExtra(IMAGE_DATE, getImageDate());
 
         context.sendBroadcast(intent);
+        Log.e("Log", " SENDED INSERT");
     }
 
-    public void updateImage(String imageUrl, int imageStatus) {
+    public void updateImage(String imageUrl, int imageStatus, String imageDate) {
         Intent intent = new Intent(RECEIVE);
 
         intent.putExtra(IMAGE_ACTION, UPDATE);
         intent.putExtra(IMAGE_URL, imageUrl);
         intent.putExtra(IMAGE_STATUS, imageStatus);
-        intent.putExtra(IMAGE_DATE, getImageDate());
+        intent.putExtra(IMAGE_DATE, imageDate);
 
         context.sendBroadcast(intent);
+        Log.e("Log", " SENDED UPDATE");
     }
 
-    public void deleteImage(String imageUrl, int imageStatus) {
+    public void deleteImage(String imageUrl, int imageStatus, String imageDate) {
         Intent intent = new Intent(RECEIVE);
 
         intent.putExtra(IMAGE_ACTION, DELETE);
         intent.putExtra(IMAGE_URL, imageUrl);
+        intent.putExtra(IMAGE_STATUS, imageStatus);
+        intent.putExtra(IMAGE_DATE, imageDate);
 
         context.sendBroadcast(intent);
+        Log.e("Log", " SENDED DELETE");
     }
 
     public String getImageDate() {

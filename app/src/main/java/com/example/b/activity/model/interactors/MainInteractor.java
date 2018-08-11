@@ -16,12 +16,12 @@ public class MainInteractor {
         repository.insertImage(imageUrl, imageStatus);
     }
 
-    public void updateImage(String imageUrl, int imageStatus) {
-        repository.updateImage(imageUrl, imageStatus);
+    public void updateImage(String imageUrl, int imageStatus, String imageDate) {
+        repository.updateImage(imageUrl, imageStatus, imageDate);
     }
 
-    public void deleteImage() {
-        //repository.deleteImage();
+    public void deleteImage(String imageUrl, int imageStatus, String imageDate) {
+        repository.deleteImage(imageUrl, imageStatus, imageDate);
     }
 
 }

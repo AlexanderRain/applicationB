@@ -14,6 +14,7 @@ import com.example.b.activity.model.interactors.MainInteractor;
 import com.example.b.activity.ui.fragments.MainFragmentView;
 
 import static com.example.b.activity.utils.Constants.DEFAULT;
+import static com.example.b.activity.utils.Constants.DELETE;
 import static com.example.b.activity.utils.Constants.ERROR;
 import static com.example.b.activity.utils.Constants.INSERTED;
 import static com.example.b.activity.utils.Constants.UNDEFINED;
@@ -30,7 +31,7 @@ public class MainPresenter {
         this.context = context;
     }
 
-    public void receiveExtras(String imageUrl, int imageStatus) {
+    public void receiveExtras(String imageUrl, int imageStatus, String imageDate) {
 
         switch (imageStatus) {
             case DEFAULT:
@@ -44,12 +45,14 @@ public class MainPresenter {
                 break;
 
             case INSERTED:
+                view.showImage(imageUrl, null);
+                interactor.deleteImage(imageUrl, INSERTED, imageDate);
                 // Alexander Rain: this case for successful loaded links
                 break;
 
             default:
                 // Alexander Rain: this case for UNDEFINED and ERROR links
-                interactor.updateImage(imageUrl, imageStatus);
+                view.showImage(imageUrl, getUpdateRequestListener(imageUrl, imageDate));
         }
     }
 
@@ -66,6 +69,22 @@ public class MainPresenter {
             @Override
             public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                 interactor.insertImage(imageUrl, INSERTED);
+                return false;
+            }
+        };
+    }
+
+    public RequestListener<Bitmap> getUpdateRequestListener(final String imageUrl, final String imageDate) {
+        return new RequestListener<Bitmap>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                interactor.updateImage(imageUrl, ERROR, imageDate);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                interactor.updateImage(imageUrl, INSERTED, imageDate);
                 return false;
             }
         };

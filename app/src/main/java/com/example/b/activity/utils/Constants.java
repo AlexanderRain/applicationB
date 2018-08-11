@@ -8,6 +8,7 @@ public class Constants {
     public static final String IMAGE_URL = "imageUrl";
     public static final String IMAGE_STATUS = "imageStatus";
     public static final String IMAGE_DATE = "image_date";
+
     //DEFAULT status generated when app receive link from test tab
     public static final int DEFAULT = 0;
     public static final int INSERTED = 1;
