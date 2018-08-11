@@ -30,7 +30,7 @@
         </activity>
 
         <service
-            android:name=".activity.model.service.MyService"
+            android:name=".activity.model.service.ImageDownloadService"
             android:enabled="true"
             android:exported="true">
         </service>

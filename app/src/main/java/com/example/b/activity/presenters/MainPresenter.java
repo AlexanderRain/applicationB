@@ -31,7 +31,7 @@ public class MainPresenter {
         this.context = context;
     }
 
-    public void receiveExtras(String imageUrl, int imageStatus, String imageDate) {
+    public void receiveExtras(String imageUrl, int imageStatus, long imageId) {
 
         switch (imageStatus) {
             case DEFAULT:
@@ -45,14 +45,15 @@ public class MainPresenter {
                 break;
 
             case INSERTED:
+                view.saveOnPath(imageUrl);
                 view.showImage(imageUrl, null);
-                interactor.deleteImage(imageUrl, INSERTED, imageDate);
+                interactor.deleteImage(imageUrl, INSERTED, imageId);
                 // Alexander Rain: this case for successful loaded links
                 break;
 
             default:
                 // Alexander Rain: this case for UNDEFINED and ERROR links
-                view.showImage(imageUrl, getUpdateRequestListener(imageUrl, imageDate));
+               view.showImage(imageUrl, getUpdateRequestListener(imageUrl));
         }
     }
 
@@ -74,17 +75,17 @@ public class MainPresenter {
         };
     }
 
-    public RequestListener<Bitmap> getUpdateRequestListener(final String imageUrl, final String imageDate) {
+    public RequestListener<Bitmap> getUpdateRequestListener(final String imageUrl) {
         return new RequestListener<Bitmap>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                interactor.updateImage(imageUrl, ERROR, imageDate);
+                interactor.updateImage(imageUrl, ERROR);
                 return false;
             }
 
             @Override
             public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                interactor.updateImage(imageUrl, INSERTED, imageDate);
+                interactor.updateImage(imageUrl, INSERTED);
                 return false;
             }
         };

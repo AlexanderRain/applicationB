@@ -12,6 +12,7 @@ import java.util.Date;
 import static com.example.b.activity.utils.Constants.DELETE;
 import static com.example.b.activity.utils.Constants.IMAGE_ACTION;
 import static com.example.b.activity.utils.Constants.IMAGE_DATE;
+import static com.example.b.activity.utils.Constants.IMAGE_ID;
 import static com.example.b.activity.utils.Constants.IMAGE_STATUS;
 import static com.example.b.activity.utils.Constants.IMAGE_URL;
 import static com.example.b.activity.utils.Constants.INSERT;
@@ -38,25 +39,24 @@ public class MainRepository {
         Log.e("Log", " SENDED INSERT");
     }
 
-    public void updateImage(String imageUrl, int imageStatus, String imageDate) {
+    public void updateImage(String imageUrl, int imageStatus) {
         Intent intent = new Intent(RECEIVE);
 
         intent.putExtra(IMAGE_ACTION, UPDATE);
         intent.putExtra(IMAGE_URL, imageUrl);
         intent.putExtra(IMAGE_STATUS, imageStatus);
-        intent.putExtra(IMAGE_DATE, imageDate);
 
         context.sendBroadcast(intent);
         Log.e("Log", " SENDED UPDATE");
     }
 
-    public void deleteImage(String imageUrl, int imageStatus, String imageDate) {
+    public void deleteImage(String imageUrl, int imageStatus, long imageId) {
         Intent intent = new Intent(RECEIVE);
 
         intent.putExtra(IMAGE_ACTION, DELETE);
         intent.putExtra(IMAGE_URL, imageUrl);
         intent.putExtra(IMAGE_STATUS, imageStatus);
-        intent.putExtra(IMAGE_DATE, imageDate);
+        intent.putExtra(IMAGE_ID, imageId);
 
         context.sendBroadcast(intent);
         Log.e("Log", " SENDED DELETE");

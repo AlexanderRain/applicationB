@@ -7,6 +7,7 @@ import com.bumptech.glide.request.RequestListener;
 public interface MainFragmentView {
 
     void showImage(String imageUrl, RequestListener<Bitmap> requestListener);
+    void saveOnPath(String imageUrl);
     void closeApp();
 
 }

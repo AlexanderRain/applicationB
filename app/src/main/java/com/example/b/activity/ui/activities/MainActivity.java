@@ -9,7 +9,8 @@ import com.example.b.R;
 import com.example.b.activity.ui.fragments.MainFragment;
 
 import static com.example.b.activity.utils.Constants.DEFAULT;
-import static com.example.b.activity.utils.Constants.IMAGE_DATE;
+import static com.example.b.activity.utils.Constants.DEFAULT_ID;
+import static com.example.b.activity.utils.Constants.IMAGE_ID;
 import static com.example.b.activity.utils.Constants.IMAGE_STATUS;
 import static com.example.b.activity.utils.Constants.IMAGE_URL;
 
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.frame_layout,
                             MainFragment.newInstance(getIntent().getStringExtra(IMAGE_URL),
                                     getIntent().getIntExtra(IMAGE_STATUS, DEFAULT),
-                                    getIntent().getStringExtra(IMAGE_DATE))).commit();
+                                    getIntent().getLongExtra(IMAGE_ID, DEFAULT_ID))).commit();
         }
     }
 }
