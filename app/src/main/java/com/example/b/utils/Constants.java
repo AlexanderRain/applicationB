@@ -26,4 +26,6 @@ public class Constants {
     public static final String PATH = "/BIGDIG/test/B";
     public static final String JPG = ".jpg";
 
+    //Permissions
+    public static final int WRITE_EXTERNAL_PERMISSION = 100;
 }

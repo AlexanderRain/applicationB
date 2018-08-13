@@ -1,12 +1,16 @@
 package com.example.b.ui.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +26,17 @@ import com.example.b.model.service.ImageDownloadService;
 import com.example.b.presenters.MainPresenter;
 import com.example.b.utils.Constants;
 
+import java.util.Objects;
+
+import static com.example.b.utils.Constants.WRITE_EXTERNAL_PERMISSION;
+
 public class MainFragment extends Fragment implements MainFragmentView {
 
     private View view;
     private ImageView imageView;
     private MainPresenter presenter;
     private Context context;
+    private String currentImageUrl;
 
     // Что, что, что за метод, что тут происходит?
     // https://tttzof351.blogspot.com/2014/06/android.html
@@ -92,8 +101,22 @@ public class MainFragment extends Fragment implements MainFragmentView {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[WRITE_EXTERNAL_PERMISSION] == PackageManager.PERMISSION_GRANTED) {
+            context.startService(new Intent(context, ImageDownloadService.class).putExtra(Constants.IMAGE_URL, currentImageUrl));
+        } else {
+            Toast.makeText(context, "Разрешите приложению доступ к файлам для сохранения картинок", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
     public void saveOnPath(String imageUrl) {
-        context.startService(new Intent(context, ImageDownloadService.class).putExtra(Constants.IMAGE_URL, imageUrl));
+        currentImageUrl = imageUrl;
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_PERMISSION);
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            context.startService(new Intent(context, ImageDownloadService.class).putExtra(Constants.IMAGE_URL, imageUrl));
+        }
     }
 
     @Override

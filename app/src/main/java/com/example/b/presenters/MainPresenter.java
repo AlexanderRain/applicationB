@@ -59,7 +59,7 @@ public class MainPresenter {
         return new RequestListener<Bitmap>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                checkForInternetConnection(imageUrl);
+                interactor.insertImage(imageUrl, checkForInternetConnection());
                 return false;
             }
 
@@ -77,7 +77,7 @@ public class MainPresenter {
         return new RequestListener<Bitmap>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                checkForInternetConnection(imageUrl);
+                interactor.updateImage(imageUrl, checkForInternetConnection(), imageId);
                 return false;
             }
 
@@ -98,14 +98,10 @@ public class MainPresenter {
         },10000);
     }
 
-    private void checkForInternetConnection(String imageUrl) {
+    private int checkForInternetConnection() {
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo network = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo network = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
 
-        if (network != null && network.isConnected()) {
-            interactor.insertImage(imageUrl, Constants.UNDEFINED);
-        } else {
-            interactor.insertImage(imageUrl, Constants.ERROR);
-        }
+        return network != null && network.isConnected() ? Constants.UNDEFINED : Constants.ERROR;
     }
 }
