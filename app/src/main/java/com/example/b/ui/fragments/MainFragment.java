@@ -24,10 +24,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.b.R;
 import com.example.b.model.service.ImageDownloadService;
 import com.example.b.presenters.MainPresenter;
-import com.example.b.utils.Constants;
 
-import java.util.Objects;
-
+import static com.example.b.utils.Constants.IMAGE_ID;
+import static com.example.b.utils.Constants.IMAGE_STATUS;
+import static com.example.b.utils.Constants.IMAGE_URL;
 import static com.example.b.utils.Constants.WRITE_EXTERNAL_PERMISSION;
 
 public class MainFragment extends Fragment implements MainFragmentView {
@@ -36,7 +36,6 @@ public class MainFragment extends Fragment implements MainFragmentView {
     private ImageView imageView;
     private MainPresenter presenter;
     private Context context;
-    private String currentImageUrl;
 
     // Что, что, что за метод, что тут происходит?
     // https://tttzof351.blogspot.com/2014/06/android.html
@@ -44,9 +43,9 @@ public class MainFragment extends Fragment implements MainFragmentView {
         MainFragment mainFragment = new MainFragment();
         Bundle extras = new Bundle();
 
-        extras.putString(Constants.IMAGE_URL, imageUrl);
-        extras.putInt(Constants.IMAGE_STATUS, imageStatus);
-        extras.putLong(Constants.IMAGE_ID, imageId);
+        extras.putString(IMAGE_URL, imageUrl);
+        extras.putInt(IMAGE_STATUS, imageStatus);
+        extras.putLong(IMAGE_ID, imageId);
         mainFragment.setArguments(extras);
 
         return mainFragment;
@@ -76,7 +75,7 @@ public class MainFragment extends Fragment implements MainFragmentView {
 
         imageView = view.findViewById(R.id.image);
 
-        presenter.receiveExtras(getArguments().getString(Constants.IMAGE_URL), getArguments().getInt(Constants.IMAGE_STATUS), getArguments().getLong(Constants.IMAGE_ID));
+        presenter.receiveExtras(getArguments().getString(IMAGE_URL), getArguments().getInt(IMAGE_STATUS), getArguments().getLong(IMAGE_ID));
     }
 
     @Override
@@ -104,7 +103,7 @@ public class MainFragment extends Fragment implements MainFragmentView {
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[WRITE_EXTERNAL_PERMISSION] == PackageManager.PERMISSION_GRANTED) {
-            context.startService(new Intent(context, ImageDownloadService.class).putExtra(Constants.IMAGE_URL, currentImageUrl));
+            context.startService(new Intent(context, ImageDownloadService.class).putExtra(IMAGE_URL, getArguments().getString(IMAGE_URL)));
         } else {
             Toast.makeText(context, "Разрешите приложению доступ к файлам для сохранения картинок", Toast.LENGTH_LONG).show();
         }
@@ -112,10 +111,10 @@ public class MainFragment extends Fragment implements MainFragmentView {
 
     @Override
     public void saveOnPath(String imageUrl) {
-        currentImageUrl = imageUrl;
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_PERMISSION);
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            context.startService(new Intent(context, ImageDownloadService.class).putExtra(Constants.IMAGE_URL, imageUrl));
+            context.startService(new Intent(context, ImageDownloadService.class).putExtra(IMAGE_URL, imageUrl));
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_PERMISSION);
         }
     }
 

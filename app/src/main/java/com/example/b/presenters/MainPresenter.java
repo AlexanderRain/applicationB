@@ -12,7 +12,11 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.b.model.interactors.MainInteractor;
 import com.example.b.ui.fragments.MainFragmentView;
-import com.example.b.utils.Constants;
+
+import static com.example.b.utils.Constants.DEFAULT;
+import static com.example.b.utils.Constants.ERROR;
+import static com.example.b.utils.Constants.INSERTED;
+import static com.example.b.utils.Constants.UNDEFINED;
 
 public class MainPresenter {
 
@@ -29,7 +33,7 @@ public class MainPresenter {
     public void receiveExtras(String imageUrl, int imageStatus, long imageId) {
 
         switch (imageStatus) {
-            case Constants.DEFAULT:
+            case DEFAULT:
                 // Alexander Rain: imageUrl == nul, when app start from launcher
                 if(imageUrl == null) {
                     view.closeApp();
@@ -39,7 +43,7 @@ public class MainPresenter {
                 view.showImage(imageUrl, getInsertRequestListener(imageUrl));
                 break;
 
-            case Constants.INSERTED:
+            case INSERTED:
                 view.saveOnPath(imageUrl);
                 view.showImage(imageUrl, null);
                 deleteWithDelayed(imageUrl, imageId);
@@ -65,7 +69,7 @@ public class MainPresenter {
 
             @Override
             public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                interactor.insertImage(imageUrl, Constants.INSERTED);
+                interactor.insertImage(imageUrl, INSERTED);
                 return false;
             }
         };
@@ -83,7 +87,7 @@ public class MainPresenter {
 
             @Override
             public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                interactor.updateImage(imageUrl, Constants.INSERTED, imageId);
+                interactor.updateImage(imageUrl, INSERTED, imageId);
                 return false;
             }
         };
@@ -93,7 +97,7 @@ public class MainPresenter {
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                interactor.deleteImage(imageUrl, Constants.INSERTED, imageId);
+                interactor.deleteImage(imageUrl, INSERTED, imageId);
             }
         },10000);
     }
@@ -102,6 +106,6 @@ public class MainPresenter {
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo network = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
 
-        return network != null && network.isConnected() ? Constants.UNDEFINED : Constants.ERROR;
+        return network != null && network.isConnected() ? UNDEFINED : ERROR;
     }
 }
