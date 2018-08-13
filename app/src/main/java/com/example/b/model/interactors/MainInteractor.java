@@ -1,12 +1,12 @@
-package com.example.b.activity.model.interactors;
+package com.example.b.model.interactors;
 
 import android.content.Context;
 
-import com.example.b.activity.model.repository.MainRepository;
+import com.example.b.model.repository.MainRepository;
 
 public class MainInteractor {
 
-    MainRepository repository;
+    private MainRepository repository;
 
     public MainInteractor(Context context) {
         repository = new MainRepository(context);
@@ -16,8 +16,8 @@ public class MainInteractor {
         repository.insertImage(imageUrl, imageStatus);
     }
 
-    public void updateImage(String imageUrl, int imageStatus) {
-        repository.updateImage(imageUrl, imageStatus);
+    public void updateImage(String imageUrl, int imageStatus, long imageId) {
+        repository.updateImage(imageUrl, imageStatus, imageId);
     }
 
     public void deleteImage(String imageUrl, int imageStatus, long imageId) {

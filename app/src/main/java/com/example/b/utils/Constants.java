@@ -1,4 +1,4 @@
-package com.example.b.activity.utils;
+package com.example.b.utils;
 
 public class Constants {
 

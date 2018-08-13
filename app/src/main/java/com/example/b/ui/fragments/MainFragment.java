@@ -1,10 +1,9 @@
-package com.example.b.activity.ui.fragments;
+package com.example.b.ui.fragments;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,13 +18,9 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.b.R;
-import com.example.b.activity.model.service.ImageDownloadService;
-import com.example.b.activity.presenters.MainPresenter;
-
-import static com.example.b.activity.utils.Constants.IMAGE_ID;
-import static com.example.b.activity.utils.Constants.IMAGE_STATUS;
-import static com.example.b.activity.utils.Constants.IMAGE_URL;
-import static com.example.b.activity.utils.Constants.INSERTED;
+import com.example.b.model.service.ImageDownloadService;
+import com.example.b.presenters.MainPresenter;
+import com.example.b.utils.Constants;
 
 public class MainFragment extends Fragment implements MainFragmentView {
 
@@ -40,9 +35,9 @@ public class MainFragment extends Fragment implements MainFragmentView {
         MainFragment mainFragment = new MainFragment();
         Bundle extras = new Bundle();
 
-        extras.putString(IMAGE_URL, imageUrl);
-        extras.putInt(IMAGE_STATUS, imageStatus);
-        extras.putLong(IMAGE_ID, imageId);
+        extras.putString(Constants.IMAGE_URL, imageUrl);
+        extras.putInt(Constants.IMAGE_STATUS, imageStatus);
+        extras.putLong(Constants.IMAGE_ID, imageId);
         mainFragment.setArguments(extras);
 
         return mainFragment;
@@ -72,9 +67,10 @@ public class MainFragment extends Fragment implements MainFragmentView {
 
         imageView = view.findViewById(R.id.image);
 
-        presenter.receiveExtras(getArguments().getString(IMAGE_URL), getArguments().getInt(IMAGE_STATUS), getArguments().getLong(IMAGE_ID));
+        presenter.receiveExtras(getArguments().getString(Constants.IMAGE_URL), getArguments().getInt(Constants.IMAGE_STATUS), getArguments().getLong(Constants.IMAGE_ID));
     }
 
+    @Override
     public void showImage(String imageUrl, RequestListener<Bitmap> requestListener) {
         // Alexander Rain:
         // https://bumptech.github.io/glide/doc/options.html#requestbuilder
@@ -95,10 +91,12 @@ public class MainFragment extends Fragment implements MainFragmentView {
         }
     }
 
+    @Override
     public void saveOnPath(String imageUrl) {
-        context.startService(new Intent(context, ImageDownloadService.class).putExtra(IMAGE_URL, imageUrl));
+        context.startService(new Intent(context, ImageDownloadService.class).putExtra(Constants.IMAGE_URL, imageUrl));
     }
 
+    @Override
     public void closeApp() {
         Toast toast = Toast.makeText(getActivity().getApplicationContext(),
                 "Приложение В не является самостоятельным приложением и будет закрыто через 10 секунд", Toast.LENGTH_SHORT);

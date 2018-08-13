@@ -1,24 +1,22 @@
-package com.example.b.activity.model.service;
+package com.example.b.model.service;
 
 import android.app.DownloadManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
+
+import com.example.b.utils.Constants;
 
 import java.io.File;
 import java.io.IOException;
 
-import static com.example.b.activity.utils.Constants.IMAGE_URL;
-import static com.example.b.activity.utils.Constants.JPG;
-import static com.example.b.activity.utils.Constants.PATH;
-import static com.example.b.activity.utils.Constants.SERVICE_NAME;
-
 public class ImageDownloadService extends IntentService {
 
     public ImageDownloadService() {
-        super(SERVICE_NAME);
+        super(Constants.SERVICE_NAME);
     }
 
     public void onCreate() {
@@ -27,12 +25,13 @@ public class ImageDownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        String imageUrl = intent.getStringExtra(IMAGE_URL);
+        String imageUrl = intent.getStringExtra(Constants.IMAGE_URL);
         file_download(imageUrl);
     }
 
     public void file_download(String imageUrl) {
-        File file = new File(PATH);
+        File file = new File(Environment.getExternalStorageDirectory() + Constants.PATH);
+
         if (file.exists() && file.isDirectory()) {
             DownloadManager downloadManager = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
             Uri downloadUri = Uri.parse(imageUrl);
@@ -41,15 +40,17 @@ public class ImageDownloadService extends IntentService {
 
             request.setAllowedNetworkTypes(
                     DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                    .setDestinationInExternalPublicDir(PATH,JPG);
+                    .setDestinationInExternalPublicDir(Constants.PATH, Constants.JPG);
 
             downloadManager.enqueue(request);
+
         } else {
             try {
                 file.createNewFile();
             } catch (IOException ioe) {
                 Log.e("Log",  "Exception " + ioe);
             }
+
             DownloadManager downloadManager = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
             Uri downloadUri = Uri.parse(imageUrl);
 
@@ -57,7 +58,7 @@ public class ImageDownloadService extends IntentService {
 
             request.setAllowedNetworkTypes(
                     DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                    .setDestinationInExternalPublicDir(PATH, JPG);
+                    .setDestinationInExternalPublicDir(Constants.PATH, Constants.JPG);
 
             downloadManager.enqueue(request);
         }

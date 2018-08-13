@@ -1,4 +1,4 @@
-package com.example.b.activity.ui.fragments;
+package com.example.b.ui.fragments;
 
 import android.graphics.Bitmap;
 
