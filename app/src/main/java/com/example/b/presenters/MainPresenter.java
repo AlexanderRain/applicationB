@@ -56,9 +56,6 @@ public class MainPresenter {
         }
     }
 
-    // Alexander Rain:
-    // this listener for insert links
-    // https://bumptech.github.io/glide/javadocs/400/com/bumptech/glide/request/RequestListener.html
     public RequestListener<Bitmap> getInsertRequestListener(final String imageUrl) {
         return new RequestListener<Bitmap>() {
             @Override
@@ -75,8 +72,6 @@ public class MainPresenter {
         };
     }
 
-    // Alexander Rain:
-    // this listener for update links
     public RequestListener<Bitmap> getUpdateRequestListener(final String imageUrl, final long imageId) {
         return new RequestListener<Bitmap>() {
             @Override

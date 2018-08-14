@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,10 +35,7 @@ public class MainFragment extends Fragment implements MainFragmentView {
     private ImageView imageView;
     private MainPresenter presenter;
     private Context context;
-    public static String currentUrl;
 
-    // Что, что, что за метод, что тут происходит?
-    // https://tttzof351.blogspot.com/2014/06/android.html
     public static MainFragment newInstance(String imageUrl, int imageStatus, long imageId) {
         MainFragment mainFragment = new MainFragment();
         Bundle extras = new Bundle();
@@ -81,16 +77,12 @@ public class MainFragment extends Fragment implements MainFragmentView {
 
     @Override
     public void showImage(String imageUrl, RequestListener<Bitmap> requestListener) {
-        // Alexander Rain:
-        // https://bumptech.github.io/glide/doc/options.html#requestbuilder
         RequestBuilder<Bitmap> requestBuilder = Glide.with(this)
                 .asBitmap()
                 .load(imageUrl)
                 .apply(new RequestOptions()
                         .error(R.drawable.load_failed));
 
-        // Alexander Rain:
-        // listener() sets a RequestBuilder listener to monitor the resource load
         if(requestBuilder != null) {
             requestBuilder.listener(requestListener).into(imageView);
 
@@ -100,12 +92,9 @@ public class MainFragment extends Fragment implements MainFragmentView {
         }
     }
 
-
-
     @Override
     public void saveOnPath(String imageUrl) {
-        currentUrl = imageUrl;
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if ( ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             context.startService(new Intent(context, ImageDownloadService.class).putExtra(IMAGE_URL, imageUrl));
         } else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_PERMISSION);

@@ -18,7 +18,6 @@ import static com.example.b.utils.Constants.DEFAULT_ID;
 import static com.example.b.utils.Constants.IMAGE_ID;
 import static com.example.b.utils.Constants.IMAGE_STATUS;
 import static com.example.b.utils.Constants.IMAGE_URL;
-import static com.example.b.utils.Constants.WRITE_EXTERNAL_PERMISSION;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Alexander Rain: какого черта так сложно написано во фрагменте
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frame_layout,
@@ -43,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startService(new Intent(getApplicationContext(), ImageDownloadService.class).putExtra(IMAGE_URL, MainFragment.currentUrl));
+            startService(new Intent(getApplicationContext(), ImageDownloadService.class).putExtra(IMAGE_URL, getIntent().getStringExtra(IMAGE_URL)));
         } else {
             Toast.makeText(getApplicationContext(), "Разрешите приложению доступ к файлам для сохранения изображения", Toast.LENGTH_LONG).show();
         }

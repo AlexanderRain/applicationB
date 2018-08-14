@@ -2,7 +2,6 @@ package com.example.b.model.repository;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.example.b.utils.Constants;
 
@@ -25,7 +24,6 @@ public class MainRepository {
         intent.putExtra(Constants.IMAGE_DATE, getImageDate());
 
         context.sendBroadcast(intent);
-        Log.e("Log", " SEND INSERT");
     }
 
     public void updateImage(String imageUrl, int imageStatus, long imageId) {
@@ -38,7 +36,6 @@ public class MainRepository {
         intent.putExtra(Constants.IMAGE_DATE, getImageDate());
 
         context.sendBroadcast(intent);
-        Log.e("Log", " SEND UPDATE");
     }
 
     public void deleteImage(String imageUrl, int imageStatus, long imageId) {
@@ -50,7 +47,6 @@ public class MainRepository {
         intent.putExtra(Constants.IMAGE_ID, imageId);
 
         context.sendBroadcast(intent);
-        Log.e("Log", " SEND DELETE");
     }
 
     private String getImageDate() {
