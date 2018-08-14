@@ -36,6 +36,7 @@ public class MainFragment extends Fragment implements MainFragmentView {
     private ImageView imageView;
     private MainPresenter presenter;
     private Context context;
+    public static String currentUrl;
 
     // Что, что, что за метод, что тут происходит?
     // https://tttzof351.blogspot.com/2014/06/android.html
@@ -99,18 +100,11 @@ public class MainFragment extends Fragment implements MainFragmentView {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[WRITE_EXTERNAL_PERMISSION] == PackageManager.PERMISSION_GRANTED) {
-            context.startService(new Intent(context, ImageDownloadService.class).putExtra(IMAGE_URL, getArguments().getString(IMAGE_URL)));
-        } else {
-            Toast.makeText(context, "Разрешите приложению доступ к файлам для сохранения картинок", Toast.LENGTH_LONG).show();
-        }
-    }
+
 
     @Override
     public void saveOnPath(String imageUrl) {
+        currentUrl = imageUrl;
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             context.startService(new Intent(context, ImageDownloadService.class).putExtra(IMAGE_URL, imageUrl));
         } else {
@@ -120,9 +114,9 @@ public class MainFragment extends Fragment implements MainFragmentView {
 
     @Override
     public void closeApp() {
-        Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                "Приложение В не является самостоятельным приложением и будет закрыто через 10 секунд", Toast.LENGTH_SHORT);
-        toast.show();
+        Toast.makeText(getActivity().getApplicationContext(),
+                "Приложение В не является самостоятельным приложением и будет закрыто через 10 секунд", Toast.LENGTH_SHORT)
+                .show();
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
