@@ -1,6 +1,6 @@
 package com.example.b.ui.activities;
 
-
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -19,7 +19,6 @@ import static com.example.b.utils.Constants.IMAGE_ID;
 import static com.example.b.utils.Constants.IMAGE_STATUS;
 import static com.example.b.utils.Constants.IMAGE_URL;
 
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -30,9 +29,11 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frame_layout,
-                            MainFragment.newInstance(getIntent().getStringExtra(IMAGE_URL),
+                            MainFragment.newInstance(
+                                    getIntent().getStringExtra(IMAGE_URL),
                                     getIntent().getIntExtra(IMAGE_STATUS, DEFAULT),
-                                    getIntent().getLongExtra(IMAGE_ID, DEFAULT_ID))).commit();
+                                    getIntent().getLongExtra(IMAGE_ID, DEFAULT_ID)))
+                    .commit();
         }
     }
 
@@ -40,10 +41,14 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startService(new Intent(getApplicationContext(), ImageDownloadService.class).putExtra(IMAGE_URL, getIntent().getStringExtra(IMAGE_URL)));
+        if (permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startService(new Intent(getApplicationContext(),
+                    ImageDownloadService.class).putExtra(IMAGE_URL,
+                        getIntent().getStringExtra(IMAGE_URL)
+                    )
+            );
         } else {
-            Toast.makeText(getApplicationContext(), "Разрешите приложению доступ к файлам для сохранения изображения", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Allow application to access the storage", Toast.LENGTH_LONG).show();
         }
     }
 }

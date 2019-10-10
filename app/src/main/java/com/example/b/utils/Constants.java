@@ -2,7 +2,8 @@ package com.example.b.utils;
 
 public class Constants {
 
-    public static final String RECEIVE = "send_to_database";
+    public static final String RECEIVER = "com.example.a.receiver.IntentReceiver";
+    public static final String HANDLER_PACKAGE = "com.example.a";
     public static final String IMAGE_ACTION = "image_action";
 
     public static final String IMAGE_URL = "image_url";
@@ -27,5 +28,5 @@ public class Constants {
     public static final String JPG = ".jpg";
 
     //Permissions
-    public static final int WRITE_EXTERNAL_PERMISSION = 100;
+    public static final int WRITE_EXTERNAL_PERMISSION = 10;
 }

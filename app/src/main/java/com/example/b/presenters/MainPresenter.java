@@ -31,7 +31,6 @@ public class MainPresenter {
     }
 
     public void receiveExtras(String imageUrl, int imageStatus, long imageId) {
-
         switch (imageStatus) {
             case DEFAULT:
                 // Alexander Rain: imageUrl == nul, when app start from launcher
@@ -56,7 +55,7 @@ public class MainPresenter {
         }
     }
 
-    public RequestListener<Bitmap> getInsertRequestListener(final String imageUrl) {
+    private RequestListener<Bitmap> getInsertRequestListener(final String imageUrl) {
         return new RequestListener<Bitmap>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
@@ -72,7 +71,7 @@ public class MainPresenter {
         };
     }
 
-    public RequestListener<Bitmap> getUpdateRequestListener(final String imageUrl, final long imageId) {
+    private RequestListener<Bitmap> getUpdateRequestListener(final String imageUrl, final long imageId) {
         return new RequestListener<Bitmap>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
